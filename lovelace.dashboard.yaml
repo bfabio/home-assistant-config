@@ -1,0 +1,537 @@
+title: Casa
+views:
+  - title: Test
+    path: test
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: weather
+                entity: weather.forecast_casa
+                show_conditions: true
+                show_temperature: true
+              - type: entity
+                entity: light.cucina
+                icon_color: orange
+                icon: mdi:ceiling-light
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-person-card
+                entity: person.fabio
+                vertical: true
+              - type: custom:mushroom-person-card
+                entity: device_tracker.pixel_6_pro
+                vertical: true
+            columns: 2
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-template-card
+                entity: sensor.ac2003_battery_level
+                icon: >-
+                  {% set level = int(states("sensor.ac2003_battery_level")) %}
+
+                  mdi:battery{{ "-charging" if
+                  states("sensor.ac2003_battery_state") == "charging" }}{{
+                  "-high" if level > 90 else "-medium" if level > 50 else "-low"
+                  }}
+                primary: '{{ states("sensor.ac2003_battery_level") }}%'
+                secondary: >-
+                  {{ "Charging" if states("sensor.ac2003_battery_state") ==
+                  "charging" else "Not charging" }}
+              - type: custom:mushroom-template-card
+                entity: sensor.pixel_6_pro_battery_level
+                icon: >-
+                  {% set state = states("sensor.pixel_6_pro_battery_state") %}
+
+                  {% set level = int(states("sensor.pixel_6_pro_battery_level"))
+                  %}
+
+                  mdi:battery{{ "-charging" if state == "charging" }}{{ "-high"
+                  if level > 90 else "-medium" if level > 50 else "-low" }}
+                primary: '{{ states("sensor.pixel_6_pro_battery_level") }}%'
+                secondary: >-
+                  {{ "Charging" if states("sensor.pixel_6_pro_battery_state") ==
+                  "charging" else "Not charging" }}
+            columns: 2
+          - type: grid
+            title: Luci
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.cucina
+                icon: mdi:ceiling-light-multiple
+                show_brightness_control: true
+              - type: custom:mushroom-light-card
+                entity: light.sala
+                icon: mdi:lamps
+                show_color_temp_control: true
+            columns: 2
+            square: false
+          - type: grid
+            title: Ambiente
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_6ac584_temperature
+                name: Sala (primo piano)
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_6ac584_humidity
+                name: Sala (primo piano)
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_fbfa00_temperature
+                name: Cucina (piano terra)
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_fbfa00_humidity
+                name: Cucina (piano terra)
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_9309cc_temperature
+                name: Studio (sensore alternativo)
+              - type: custom:mushroom-entity-card
+                entity: sensor.esphome_web_9309cc_humidity
+                name: Studio (sensore alternativo)
+            columns: 2
+            square: false
+          - type: grid
+            title: Dispositivi
+            cards:
+              - type: custom:mushroom-fan-card
+                show_percentage_control: true
+                show_oscillate_control: true
+                entity: climate.comfoair
+                icon_animation: false
+              - type: custom:mushroom-template-card
+                primary: Router Buffalo
+                secondary: |-
+                  {% if is_state("switch.third_reality_1_interruttore", "on") %}
+                  {{ states("sensor.third_reality_1_potenza") }}W
+                  {% endif %}
+                icon: mdi:power-plug
+                layout: horizontal
+                entity: sensor.third_reality_1_potenza
+                icon_color: >-
+                  {{ "accent" if is_state("switch.third_reality_1_interruttore",
+                  "on") else "disabled" }}
+                tap_action:
+                  action: more-info
+              - type: custom:mushroom-template-card
+                primary: Frigo primo piano
+                secondary: |-
+                  {% if is_state("switch.third_reality_3_interruttore", "on") %}
+                  {{ states("sensor.third_reality_3_potenza") }}W
+                  {% endif %}
+                icon: mdi:power-plug
+                layout: horizontal
+                entity: sensor.third_reality_3_potenza
+                icon_color: >-
+                  {{ "accent" if is_state("switch.third_reality_3_interruttore",
+                  "on") else "disabled" }}
+                tap_action:
+                  action: more-info
+              - type: custom:mushroom-template-card
+                primary: TV Sala primo piano
+                secondary: >-
+                  {% if is_state("switch.third_reality_4_interruttore_2", "on")
+                  %}
+
+                  {{ states("sensor.third_reality_4_potenza_2") }}W
+
+                  {% endif %}
+                icon: mdi:power-plug
+                layout: horizontal
+                entity: sensor.third_reality_4_potenza_2
+                icon_color: >-
+                  {{ "accent" if
+                  is_state("switch.third_reality_4_interruttore_2", "on") else
+                  "disabled" }}
+                tap_action:
+                  action: more-info
+              - type: custom:mushroom-entity-card
+                entity: sensor.potenza_assorbita_tutti_i_carichi
+                name: Consumo Casa
+              - type: custom:mushroom-entity-card
+                entity: sensor.inverter_potenza_attiva
+                icon: mdi:solar-power-variant-outline
+                icon_color: green
+                name: Fotovoltaico
+              - type: custom:mushroom-template-card
+                primary: Acqua della gatta
+                secondary: >-
+                  {% if is_state("binary_sensor.esphome_web_c9ead4_vuota", "on")
+                  %}
+
+                  Da riempire
+
+                  {% else %}
+
+                  Piena
+
+                  {% endif %}
+                icon: mdi:cat
+                layout: horizontal
+                entity: binary_sensor.esphome_web_c9ead4_vuota
+                icon_color: >-
+                  {{ "red" if is_state("binary_sensor.esphome_web_c9ead4_vuota",
+                  "on") else "grey" }}
+                tap_action:
+                  action: more-info
+            columns: 2
+            square: false
+    badges: []
+  - path: default_view
+    title: Home
+    cards:
+      - type: entities
+        entities:
+          - switch.third_reality_1_interruttore
+          - sensor.third_reality_1_corrente
+          - sensor.third_reality_1_fattore_di_potenza
+          - sensor.third_reality_1_frequenza_ca
+          - sensor.third_reality_1_potenza
+          - sensor.third_reality_1_sommatoria_consegnata
+          - sensor.third_reality_1_tensione
+        title: Camera da letto (Piano terra)
+      - type: entities
+        entities:
+          - light.cucina
+          - light.lampadario_centrale
+          - light.lampadario_divano
+          - light.lampadario_lavello
+          - light.led_isola_cucina
+          - light.led_perimetro
+          - switch.third_reality_5_interruttore_3
+          - sensor.third_reality_5_corrente_3
+          - sensor.third_reality_5_frequenza_ca_3
+          - sensor.third_reality_5_potenza_3
+          - sensor.third_reality_5_sommatoria_consegnata_3
+          - sensor.third_reality_5_tensione_3
+        title: Cucina (Piano terra)
+        footer:
+          type: buttons
+          entities:
+            - entity: scene.cucina_luce_notturna
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_energia
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_inverno
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_natale
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_relax
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_lettura
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_normale
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_concentrazione
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_luce_soffusa
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_tramonto_nella_savana
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_tramonto_tropicale
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_aurora_boreale
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_fioritura_primaverile
+              show_icon: true
+              show_name: true
+            - entity: scene.cucina_stagno_dorato
+              show_icon: true
+              show_name: true
+      - type: entities
+        entities:
+          - switch.third_reality_3_interruttore
+          - sensor.third_reality_3_corrente
+          - sensor.third_reality_3_frequenza_ca
+          - sensor.third_reality_3_potenza
+          - sensor.third_reality_3_sommatoria_consegnata
+          - sensor.third_reality_3_tensione
+        title: Cucina (Primo piano)
+      - type: entities
+        entities:
+          - light.luce_salotto
+          - light.sala
+          - switch.third_reality_4_interruttore_2
+          - sensor.third_reality_4_corrente_2
+          - sensor.third_reality_4_frequenza_ca_2
+          - sensor.third_reality_4_potenza_2
+          - sensor.third_reality_4_sommatoria_consegnata_2
+          - sensor.third_reality_4_tensione_2
+        title: Sala (Primo piano)
+        footer:
+          type: buttons
+          entities:
+            - entity: scene.sala_relax
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_concentrazione
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_tramonto_nella_savana
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_tramonto_tropicale
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_luce_soffusa
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_fioritura_primaverile
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_luce_notturna
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_lettura
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_aurora_boreale
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_luce_brillante
+              show_icon: true
+              show_name: true
+            - entity: scene.sala_energia
+              show_icon: true
+              show_name: true
+      - type: grid
+        square: false
+        columns: 1
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.comfoair_ventilation_level
+              - entity: binary_sensor.comfoair_bypass_valve_open
+              - entity: sensor.comfoair_outside_air_temperature
+              - entity: sensor.comfoair_exhaust_air_temperature
+              - entity: sensor.comfoair_return_air_temperature
+              - entity: sensor.comfoair_supply_air_temperature
+              - entity: sensor.comfoair_intake_fan_speed
+              - entity: sensor.comfoair_intake_fan_speed_rpm
+              - entity: sensor.comfoair_exhaust_fan_speed
+              - entity: sensor.comfoair_exhaust_fan_speed_rpm
+              - entity: sensor.comfoair_supply_air_level
+              - entity: sensor.comfoair_return_air_level
+              - entity: binary_sensor.comfoair_supply_fan_active
+              - entity: sensor.comfoair_filter_hours
+              - entity: sensor.comfoair_filter_status
+              - entity: sensor.comfoair_filter_warning_weeks
+              - entity: binary_sensor.comfoair_frost_protection_active
+              - entity: sensor.comfoair_frost_protection_hours
+              - entity: sensor.comfoair_frost_protection_level
+              - entity: sensor.comfoair_frost_protection_minutes
+              - entity: sensor.comfoair_l1_switch_off_delay_minutes
+              - entity: sensor.comfoair_level0_hours
+              - entity: sensor.comfoair_level1_hours
+              - entity: sensor.comfoair_level2_hours
+              - entity: sensor.comfoair_level3_hours
+              - entity: sensor.comfoair_bypass_open_hours
+              - entity: sensor.comfoair_boost_ventilation_minutes
+              - entity: binary_sensor.comfoair_summer_mode
+            title: Soggiorno (Piano terra)
+          - type: thermostat
+            entity: climate.comfoair
+      - title: Energy distribution today
+        type: energy-distribution
+        link_dashboard: true
+      - type: entities
+        entities:
+          - person.fabio
+      - type: entities
+        entities:
+          - sensor.hacs
+          - sensor.potenza_assorbita_tutti_i_carichi
+          - sensor.potenza_immessa_in_rete
+          - sensor.potenza_prelevata_dalla_rete
+        title: Sensor
+      - type: entities
+        entities:
+          - switch.adaptive_lighting_adapt_brightness_cucina
+          - switch.adaptive_lighting_adapt_brightness_default
+          - switch.adaptive_lighting_adapt_color_cucina
+          - switch.adaptive_lighting_adapt_color_default
+          - switch.adaptive_lighting_sleep_mode_cucina
+          - switch.adaptive_lighting_sleep_mode_default
+          - switch.adaptive_lighting_cucina
+          - switch.adaptive_lighting_default
+        title: Switch
+      - type: weather-forecast
+        entity: weather.forecast_casa
+        show_forecast: false
+      - type: entities
+        entities:
+          - entity: sensor.electricity_maps_intensita_della_co2
+            name: Intensità della CO2
+          - entity: >-
+              sensor.electricity_maps_percentuale_della_rete_di_combustibili_fossili
+            name: Percentuale della rete di combustibili fossili
+        title: Electricity Maps
+      - type: entities
+        entities:
+          - entity: sensor.inverter_corrente_fv_1
+            name: Corrente FV 1
+          - entity: sensor.inverter_corrente_fv_2
+            name: Corrente FV 2
+          - entity: sensor.inverter_efficienza
+            name: Efficienza
+          - entity: sensor.inverter_ottimizzatori_in_linea
+            name: Ottimizzatori in linea
+          - entity: sensor.inverter_picco_di_potenza_giornaliero
+            name: Picco di potenza giornaliero
+          - entity: sensor.inverter_potenza_attiva
+            name: Potenza attiva
+          - entity: sensor.inverter_potenza_in_ingresso
+            name: Potenza in ingresso
+          - entity: sensor.inverter_rendimento_giornaliero
+            name: Rendimento giornaliero
+          - entity: sensor.inverter_rendimento_totale
+            name: Rendimento totale
+          - entity: sensor.inverter_tensione_fv_1
+            name: Tensione FV 1
+          - entity: sensor.inverter_tensione_fv_2
+            name: Tensione FV 2
+        title: Inverter
+      - type: entities
+        entities:
+          - entity: sensor.power_meter_energia_immessa_in_rete
+            name: Energia immessa in rete
+          - entity: sensor.power_meter_energia_importata_dalla_rete
+            name: Energia importata dalla rete
+          - entity: sensor.power_meter_fattore_di_potenza
+            name: Fattore di potenza
+          - entity: sensor.power_meter_potenza_attiva
+            name: Potenza attiva
+        title: Power meter
+      - type: entities
+        entities:
+          - entity: sensor.shellyht_98f4abf38aa0_humidity
+            name: Humidity
+          - entity: sensor.shellyht_98f4abf38aa0_temperature
+            name: Temperature
+        title: shellyht-98F4ABF38AA0
+      - type: entities
+        entities:
+          - entity: sensor.shellyht_98f4abf38aee_humidity
+            name: Humidity
+          - entity: sensor.shellyht_98f4abf38aee_temperature
+            name: Temperature
+        title: shellyht-98F4ABF38AEE
+      - type: entities
+        entities:
+          - entity: sensor.power_highest_peak_time_tomorrow
+            name: Ora di picco di massima potenza - domani
+          - entity: sensor.power_highest_peak_time_today
+            name: Ora di picco di massima potenza - oggi
+          - entity: sensor.energy_production_tomorrow
+            name: Produzione di energia stimata - domani
+          - entity: sensor.energy_production_today
+            name: Produzione di energia stimata - oggi
+          - entity: sensor.energy_next_hour
+            name: Produzione di energia stimata - ora successiva
+          - entity: sensor.energy_current_hour
+            name: Produzione di energia stimata - quest'ora
+          - entity: sensor.energy_production_today_remaining
+            name: Produzione di energia stimata - rimanente oggi
+          - entity: sensor.power_production_now
+            name: Produzione di potenza stimata - ora
+        title: Solar production forecast
+      - type: entities
+        entities:
+          - entity: switch.third_reality_2_interruttore_4
+            name: Interruttore
+          - entity: sensor.third_reality_2_corrente_4
+            name: Corrente
+          - entity: sensor.third_reality_2_frequenza_ca_4
+            name: Frequenza CA
+          - entity: sensor.third_reality_2_potenza_4
+            name: Potenza
+          - entity: sensor.third_reality_2_sommatoria_consegnata_4
+            name: Sommatoria consegnata
+          - entity: sensor.third_reality_2_tensione_4
+            name: Tensione
+        title: Third Reality 2
+      - type: entities
+        entities:
+          - entity: sensor.esphome_web_6ac584_absolute_humidity
+            name: Absolute Humidity
+          - entity: sensor.esphome_web_6ac584_altitude
+            name: Altitude
+          - entity: sensor.esphome_web_6ac584_dew_point
+            name: Dew Point
+          - entity: sensor.esphome_web_6ac584_equivalent_sea_level_pressure
+            name: Equivalent sea level pressure
+          - entity: sensor.esphome_web_6ac584_humidity
+            name: Humidity
+          - entity: sensor.esphome_web_6ac584_pressure
+            name: Pressure
+          - entity: sensor.esphome_web_6ac584_temperature
+            name: Temperature
+        title: Sensors 1
+      - type: entities
+        entities:
+          - entity: sensor.esphome_web_fc14e0_humidity
+            name: Humidity
+          - entity: sensor.esphome_web_fc14e0_pressure
+            name: Pressure
+          - entity: sensor.esphome_web_fc14e0_temperature
+            name: Temperature
+        title: Sensors 2
+      - type: entities
+        entities:
+          - entity: binary_sensor.esphome_web_c9ead4_vuota
+            name: Vuota
+        title: Fontana della Gatta
+      - type: entities
+        entities:
+          - entity: sensor.esphome_web_9309cc_current_water_usage
+            name: Current water usage
+          - entity: sensor.esphome_web_9309cc_total_water_m
+            name: Total Water m³
+          - entity: sensor.esphome_web_9309cc_total_water_usage
+            name: Total Water Usage
+        title: Acqua primo piano
+      - type: entities
+        entities:
+          - entity: sensor.esphome_web_fbfa00_humidity
+            name: Humidity
+          - entity: sensor.esphome_web_fbfa00_pressure
+            name: Pressure
+          - entity: sensor.esphome_web_fbfa00_temperature
+            name: Temperature
+        title: Sensors 3
+      - type: entities
+        entities:
+          - entity: sensor.tuya_1_corrente
+            name: Corrente
+          - entity: sensor.tuya_1_potenza
+            name: Potenza
+          - entity: sensor.tuya_1_sommatoria_consegnata
+            name: Sommatoria consegnata
+          - entity: sensor.tuya_1_tensione
+            name: Tensione
+        title: Tuya 1
+      - type: entities
+        entities:
+          - entity: sensor.tuya_2_corrente
+            name: Corrente
+          - entity: sensor.tuya_2_potenza
+            name: Potenza
+          - entity: sensor.tuya_2_sommatoria_consegnata
+            name: Sommatoria consegnata
+          - entity: sensor.tuya_2_tensione
+            name: Tensione
+        title: Tuya 2
+

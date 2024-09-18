@@ -1,0 +1,117 @@
+- id: '1717963596790'
+  alias: Notifica l'acqua della GATTA
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: 13297046e34e6a4b3acc7e8876b9de60
+    entity_id: 2bed5c429d39e940b167dc2a7e18b434
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  condition: []
+  action:
+  - service: notify.notify
+    metadata: {}
+    data:
+      title: La GATTA ha sete
+      message: "C'è poca acqua nella fontana della GATTA \U0001F63A"
+  mode: single
+- id: '1720384476841'
+  alias: Comfoair notte
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - condition: time
+    after: 01:00:00
+    before: 06:00:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  action:
+  - service: climate.set_fan_mode
+    target:
+      entity_id: climate.comfoair
+    data:
+      fan_mode: high
+  mode: single
+- id: '1720384624492'
+  alias: Comfoair giorno
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - condition: time
+    after: 06:00:00
+    before: 00:00:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  action:
+  - service: climate.set_fan_mode
+    target:
+      entity_id: climate.comfoair
+    data:
+      fan_mode: medium
+  mode: single
+- id: '1723359120018'
+  alias: Velocità massima quando è aperto bypass
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - type: is_on
+    condition: device
+    device_id: 2595a8feb9aeee67aadc5005edb0ba00
+    entity_id: 52282dbab866ecc7dc6504aed92c5085
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  action:
+  - target:
+      entity_id: climate.comfoair
+    data:
+      fan_mode: high
+    action: climate.set_fan_mode
+  mode: single
+- id: '1723359193330'
+  alias: Ferma quando bypass è chiuso
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - type: is_off
+    condition: device
+    device_id: 2595a8feb9aeee67aadc5005edb0ba00
+    entity_id: 52282dbab866ecc7dc6504aed92c5085
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  action:
+  - target:
+      entity_id: climate.comfoair
+    data:
+      fan_mode: 'off'
+    action: climate.set_fan_mode
+  mode: single

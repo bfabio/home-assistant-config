@@ -1,0 +1,90 @@
+substitutions:
+  name: esphome-acqua-primo-piano
+  friendly_name: Acqua primo piano
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: '1.0'
+
+# esp32:
+#  board: esp32-c3-devkitm-1
+#  framework:
+#    type: arduino
+    
+esp32:
+  # RISC-V board
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  framework:
+    type: esp-idf
+    version: 5.1.2
+    platform_version: 6.5.0
+
+sensor:
+  # YF-B5 waterflow sensor
+  - platform: pulse_counter
+    pin:
+      number: 4
+      mode:
+        input: true
+        # pullup: true
+    unit_of_measurement: 'L/min'
+    # accuracy_decimals: 2
+    id: water_usage_first_floor
+    name: 'Current water usage'
+    update_interval: 5s
+    # filters:
+    #  - lambda: return (x / 396); # 396 = 6,6 * 60
+  - platform: integration
+    name: "Total Water Usage"
+    unit_of_measurement: 'L'
+    # accuracy_decimals: 2
+    sensor: water_usage_first_floor
+    time_unit: min
+  - platform: integration
+    name: "Total Water m³"
+    unit_of_measurement: 'mc'
+    # accuracy_decimals: 2
+    sensor: water_usage_first_floor
+    time_unit: min
+    filters:
+      - lambda: return (x / 1000);
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+  - platform: esphome
+
+# Allow provisioning Wi-Fi via serial
+improv_serial:
+
+wifi:
+  # Set up a wifi access point
+  ap: {}
+  networks: !secret networks
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://esphome/firmware/esphome-web/esp32c3.yaml@v2
+  import_full_config: true
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# To have a "next url" for improv serial
+web_server:
+    
